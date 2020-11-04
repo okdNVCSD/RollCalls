@@ -2,9 +2,9 @@
 SELECT * FROM SSRS.AARSI_SharePaths
 
 
-drop table ##households_20201102
+drop table ##households_20201104
 select *
-into ##households_20201102
+into ##households_20201104
 from OPENQUERY(campus, '
 	DECLARE @endYear VARCHAR(10) = ''2021'';
 	SELECT *
@@ -57,9 +57,9 @@ from OPENQUERY(campus, '
 ')
 
 
-drop table ##students_20201102
+drop table ##students_20201104
 select *
-into ##students_20201102
+into ##students_20201104
 from OPENQUERY(campus, '
 	DECLARE @endYear VARCHAR(10) = ''2021'';
 	SELECT * FROM (
@@ -128,9 +128,9 @@ from OPENQUERY(campus, '
 ');
 
 
-drop table ##studentSpecific_20201102
+drop table ##studentSpecific_20201104
 select *
-into ##studentSpecific_20201102
+into ##studentSpecific_20201104
 from OPENQUERY(campus, '
 	DECLARE @endYear VARCHAR(10) = ''2021'';
 	SELECT * FROM (
@@ -199,5 +199,7 @@ from OPENQUERY(campus, '
 	where enr.enrNum = 1
 ');
 
+
 SELECT * FROM campus.clark.dbo.EnrollmentNV WHERE personID = '2521408'
 SELECT * FROM campus.clark.dbo.calendar WHERE calendarID ='14789'
+SELECT * FROM campus.clark.dbo.school WHERE name LIKE 'sun%'
