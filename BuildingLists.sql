@@ -2,9 +2,9 @@
 SELECT * FROM SSRS.AARSI_SharePaths
 
 
-drop table ##households_20201104
+drop table ##households_20201105
 select *
-into ##households_20201104
+into ##households_20201105
 from OPENQUERY(campus, '
 	DECLARE @endYear VARCHAR(10) = ''2021'';
 	SELECT *
@@ -57,9 +57,9 @@ from OPENQUERY(campus, '
 ')
 
 
-drop table ##students_20201104
+drop table ##students_20201105
 select *
-into ##students_20201104
+into ##students_20201105
 from OPENQUERY(campus, '
 	DECLARE @endYear VARCHAR(10) = ''2021'';
 	SELECT * FROM (
@@ -128,9 +128,9 @@ from OPENQUERY(campus, '
 ');
 
 
-drop table ##studentSpecific_20201104
+drop table ##studentSpecific_20201105
 select *
-into ##studentSpecific_20201104
+into ##studentSpecific_20201105
 from OPENQUERY(campus, '
 	DECLARE @endYear VARCHAR(10) = ''2021'';
 	SELECT * FROM (
