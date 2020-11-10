@@ -1,7 +1,7 @@
-$destFileName = "Students Missing in Roll Call 11-06-2020.xlsx";
-$sourceFileName = "BlankRoll Call Student List 11-06-2020.xlsx";
-$sourceFilePath = "C:\Users\OKADAK\Documents\Tasks\2020_11_06\RollCall\Data\Blank\";
-#$LT15FilePath = "C:\Users\OKADAK\Documents\Tasks\2020_11_06\RollCall\Data\Blank\LessThan15\";
+$destFileName = "Students Missing in Roll Call 11-10-2020.xlsx";
+$sourceFileName = "BlankRoll Call Student List 11-10-2020.xlsx";
+$sourceFilePath = "C:\Users\OKADAK\Documents\Tasks\2020_11_10\RollCall\Data\Blank\";
+#$LT15FilePath = "C:\Users\OKADAK\Documents\Tasks\2020_11_10\RollCall\Data\Blank\LessThan15\";
 
 $ServerOT = "WS-2UA7192G9Q"
 $DatabaseOT = "Utils"
@@ -19,7 +19,7 @@ $commandData.commandText = "
         s.[CCSDLoc], s.[School], s.[Region], s.[Student Number], s.[Student], s.[Grade], s.[HouseHoldPhone], s.[Address], s.[City], s.[State], s.[Zip], s.[Connectivity], s.[Device], s.[latitude], s.[longitude],
         f.FolderPath AS CopyDestinationFullPath      
         --REPLACE(f.FolderLocation, '\\WS-MJ810PD\AARSI School Shares\', 'Z:\') AS CopyDestinationFullPath      
-    FROM dbo.RollCallOutput_20201106 AS s
+    FROM dbo.RollCallOutput_20201110 AS s
     INNER JOIN dbo.schoolFolders AS f ON LTRIM(RTRIM(CAST(s.[CCSDLoc] AS VARCHAR(20)))) = f.schoolID
     --INNER JOIN SSRS.AARSI_SharePaths AS f ON LTRIM(RTRIM(CAST(s.[CCSDLoc] AS VARCHAR(20)))) = f.CCSDNum    
     ORDER BY s.[CCSDLoc] ASC, s.[Student] ASC;
@@ -29,11 +29,11 @@ $commandData.commandText = "
         s.[CCSDLoc], s.[School], s.[Region], s.[Student Number], s.[Student], s.[Grade], s.[HouseHoldPhone], s.[Address], s.[City], s.[State], s.[Zip], s.[Connectivity], s.[Device], s.[latitude], s.[longitude],
         'test' AS CopyDestinationFullPath, cnt
         --REPLACE(f.FolderLocation, '\\WS-MJ810PD\AARSI School Shares\', 'Z:\') AS CopyDestinationFullPath      
-    FROM dbo.RollCallOutput_20201106 AS s
+    FROM dbo.RollCallOutput_20201110 AS s
     INNER JOIN (
         SELECT * FROM (
             SELECT CCSDLoc AS schoolID, COUNT(*) cnt 
-            FROM dbo.RollCallOutput_20201106 s2
+            FROM dbo.RollCallOutput_20201110 s2
             GROUP BY CCSDLoc
         ) L1 WHERE cnt <= 15
     ) cL ON s.CCSDLoc = cL.schoolID

@@ -3,15 +3,15 @@ GO
 
 DROP TABLE #rollcall;
 SELECT studentNumber, CCSDLoc, School, Region, firstName, lastName INTO #rollcall 
-FROM dbo.RollCall_20201106;
+FROM dbo.RollCall_20201110;
 
-SELECT * FROM dbo.RollCall_20201106
+SELECT * FROM dbo.RollCall_20201110
 
 DROP TABLE #tmphouseholds;
-SELECT * INTO #tmphouseholds FROM OPENQUERY([ORIONTEST.CIS.CCSD.NET], 'SELECT * FROM ##households_20201106');
+SELECT * INTO #tmphouseholds FROM OPENQUERY([ORIONTEST.CIS.CCSD.NET], 'SELECT * FROM ##households_20201110');
 
 DROP TABLE #students;
-SELECT * INTO #students FROM OPENQUERY([ORIONTEST.CIS.CCSD.NET], 'SELECT * FROM ##students_20201106');
+SELECT * INTO #students FROM OPENQUERY([ORIONTEST.CIS.CCSD.NET], 'SELECT * FROM ##students_20201110');
 
 
 DROP TABLE #households;
@@ -50,7 +50,7 @@ SELECT * FROM #households WHERE hmnum = 1 AND secondary = 1 AND studentNumber IN
 
 SELECT COUNT(*) FROM #rollcall
 SELECT COUNT(DISTINCT studentNumber ) FROM #rollcall
-SELECT * FROM dbo.RollCall_20201106 r
+SELECT * FROM dbo.RollCall_20201110 r
 WHERE NOT EXISTS ( SELECT * FROM #students s WHERE s.[student Number] = r.studentnumber ) 
 
 
@@ -87,7 +87,7 @@ order by  School, Student ;
 
 
 SELECT DISTINCT CCSDLoc FROM #output 
---83 schools 
+--74 schools 
 
 
 
@@ -117,24 +117,24 @@ WHERE [student number] = '12264531'
 
 SELECT * FROM #households WHERE studentNumber = '1157199'
 
-DROP TABLE dbo.RollCallOutput_20201106;
-SELECT * INTO dbo.RollCallOutput_20201106
+DROP TABLE dbo.RollCallOutput_20201110;
+SELECT * INTO dbo.RollCallOutput_20201110
 FROM #output 
 
 SELECT * FROM #output WHERE [CCSDLoc] = '951'
 
 
-SELECT COUNT(*) FROM dbo.RollCall_20201106
-SELECT COUNT(DISTINCT [StudentNumber]) FROM dbo.RollCall_20201106
+SELECT COUNT(*) FROM dbo.RollCall_20201110
+SELECT COUNT(DISTINCT [StudentNumber]) FROM dbo.RollCall_20201110
 
 SELECT COUNT(*) FROM #output 
 SELECT COUNT(DISTINCT [student number]) FROM #output
 
-SELECT [StudentNumber] FROM dbo.RollCall_20201106
+SELECT [StudentNumber] FROM dbo.RollCall_20201110
 ExCEPT 
 SELECT [student Number] FROM #output 
 EXCEPT 
-SELECT StudentNumber FROM dbo.RollCall_20201106
+SELECT StudentNumber FROM dbo.RollCall_20201110
 
 
 SELECT DISTINCT CCSDLoc, School FROM #output
@@ -158,7 +158,7 @@ SELECT DISTINCT CCSDNum AS CCSDLoc  FROM [ORIONTEST.CIS.CCSD.NET].ACCOUNTABILITY
         s.[CCSDLoc], s.[School], s.[Region], s.[Student Number], s.[Student], s.[Grade], s.[HouseHoldPhone], s.[Address], s.[City], s.[State], s.[Zip], s.[Connectivity], s.[Device], s.[latitude], s.[longitude],
         f.FolderPath AS CopyDestinationFullPath      
         --REPLACE(f.FolderLocation, '\\WS-MJ810PD\AARSI School Shares\', 'Z:\') AS CopyDestinationFullPath      
-    FROM dbo.RollCallOutput_20201106 AS s
+    FROM dbo.RollCallOutput_20201110 AS s
     INNER JOIN dbo.schoolFolders AS f ON LTRIM(RTRIM(CAST(s.[CCSDLoc] AS VARCHAR(20)))) = f.schoolID
     --INNER JOIN SSRS.AARSI_SharePaths AS f ON LTRIM(RTRIM(CAST(s.[CCSDLoc] AS VARCHAR(20)))) = f.CCSDNum    
     ORDER BY s.[CCSDLoc] ASC, s.[Student] ASC;
