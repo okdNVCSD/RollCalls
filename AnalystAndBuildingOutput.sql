@@ -3,15 +3,15 @@ GO
 
 DROP TABLE #rollcall;
 SELECT studentNumber, CCSDLoc, School, Region, firstName, lastName INTO #rollcall 
-FROM dbo.RollCall_20201112;
+FROM dbo.RollCall_20201113;
 
-SELECT * FROM dbo.RollCall_20201112
+SELECT * FROM dbo.RollCall_20201113
 
 DROP TABLE #tmphouseholds;
-SELECT * INTO #tmphouseholds FROM OPENQUERY([ORIONTEST.CIS.CCSD.NET], 'SELECT * FROM ##households_20201112');
+SELECT * INTO #tmphouseholds FROM OPENQUERY([ORIONTEST.CIS.CCSD.NET], 'SELECT * FROM ##households_20201113');
 
 DROP TABLE #students;
-SELECT * INTO #students FROM OPENQUERY([ORIONTEST.CIS.CCSD.NET], 'SELECT * FROM ##students_20201112');
+SELECT * INTO #students FROM OPENQUERY([ORIONTEST.CIS.CCSD.NET], 'SELECT * FROM ##students_20201113');
 
 
 DROP TABLE #households;
@@ -22,7 +22,7 @@ SELECT DISTINCT personID FROM #tmphouseholds
 EXCEPT
 SELECT DISTINCT personID FROM #households;
 
-
+--12301864. Her enrollment is not included in enrollmentNV for whatever reason...
 
 DROP TABLE #missingPrimaryHH;
 SELECT * INTO #missingPrimaryHH FROM #rollcall r
@@ -30,13 +30,8 @@ WHERE NOT EXISTS ( SELECT * FROM #households h WHERE h.hmNum = 1 AND h.studentNu
 
 SELECT * FROM #missingPrimaryHH
 
-1297619		TEL = (702)755-2243	3237 KEMP ST, NORTH LAS VEGAS, NV 89032
-567471
-1184106		TEL = (702)742-2391
 
 
-12032012	TEL = (702)354-8822 740 E WARM SPRINGS RD #421, HENDERSON, NV 89015
-1184106		TEL = (702)742-2391
 
 
 SELECT * FROM #households WHERE studentNumber IN ( 
@@ -50,7 +45,7 @@ SELECT * FROM #households WHERE hmnum = 1 AND secondary = 1 AND studentNumber IN
 
 SELECT COUNT(*) FROM #rollcall
 SELECT COUNT(DISTINCT studentNumber ) FROM #rollcall
-SELECT * FROM dbo.RollCall_20201112 r
+SELECT * FROM dbo.RollCall_20201113 r
 WHERE NOT EXISTS ( SELECT * FROM #students s WHERE s.[student Number] = r.studentnumber ) 
 
 
@@ -87,7 +82,7 @@ order by  School, Student ;
 
 
 SELECT DISTINCT CCSDLoc FROM #output 
---74 schools 
+--71 schools 
 
 
 
@@ -96,6 +91,12 @@ SELECT DISTINCT CCSDLoc FROM #output
 SELECT * FROM #output 
 --WHERE Address IS NOT NULL AND LEN(Address) BETWEEN 0 AND 6
 ORDER BY LEN(Address)
+
+
+-- Persisting 2 addresses missing coordinate info.
+SELECT * FROM #output 
+--WHERE Address IS NOT NULL AND LEN(Address) BETWEEN 0 AND 6
+ORDER BY LEN(latitude)
 
 
 
@@ -108,33 +109,33 @@ FROM #output AS o
 WHERE [student number] = '12264531'
 
 
-UPDATE o 
-SET Address = 'PO Box 571150'
-FROM #output AS o 
-WHERE [student number] = '12264531'
+--UPDATE o 
+--SET Address = 'PO Box 571150'
+--FROM #output AS o 
+--WHERE [student number] = '12264531'
 
 
 
-SELECT * FROM #households WHERE studentNumber = '1157199'
+--SELECT * FROM #households WHERE studentNumber = '1157199'
 
-DROP TABLE dbo.RollCallOutput_20201112;
-SELECT * INTO dbo.RollCallOutput_20201112
+DROP TABLE dbo.RollCallOutput_20201113;
+SELECT * INTO dbo.RollCallOutput_20201113
 FROM #output 
 
 SELECT * FROM #output WHERE [CCSDLoc] = '951'
 
 
-SELECT COUNT(*) FROM dbo.RollCall_20201112
-SELECT COUNT(DISTINCT [StudentNumber]) FROM dbo.RollCall_20201112
+SELECT COUNT(*) FROM dbo.RollCall_20201113
+SELECT COUNT(DISTINCT [StudentNumber]) FROM dbo.RollCall_20201113
 
 SELECT COUNT(*) FROM #output 
 SELECT COUNT(DISTINCT [student number]) FROM #output
 
-SELECT [StudentNumber] FROM dbo.RollCall_20201112
+SELECT [StudentNumber] FROM dbo.RollCall_20201113
 ExCEPT 
 SELECT [student Number] FROM #output 
 EXCEPT 
-SELECT StudentNumber FROM dbo.RollCall_20201112
+SELECT StudentNumber FROM dbo.RollCall_20201113
 
 
 SELECT DISTINCT CCSDLoc, School FROM #output
@@ -158,7 +159,7 @@ SELECT DISTINCT CCSDNum AS CCSDLoc  FROM [ORIONTEST.CIS.CCSD.NET].ACCOUNTABILITY
         s.[CCSDLoc], s.[School], s.[Region], s.[Student Number], s.[Student], s.[Grade], s.[HouseHoldPhone], s.[Address], s.[City], s.[State], s.[Zip], s.[Connectivity], s.[Device], s.[latitude], s.[longitude],
         f.FolderPath AS CopyDestinationFullPath      
         --REPLACE(f.FolderLocation, '\\WS-MJ810PD\AARSI School Shares\', 'Z:\') AS CopyDestinationFullPath      
-    FROM dbo.RollCallOutput_20201112 AS s
+    FROM dbo.RollCallOutput_20201113 AS s
     INNER JOIN dbo.schoolFolders AS f ON LTRIM(RTRIM(CAST(s.[CCSDLoc] AS VARCHAR(20)))) = f.schoolID
     --INNER JOIN SSRS.AARSI_SharePaths AS f ON LTRIM(RTRIM(CAST(s.[CCSDLoc] AS VARCHAR(20)))) = f.CCSDNum    
     ORDER BY s.[CCSDLoc] ASC, s.[Student] ASC;

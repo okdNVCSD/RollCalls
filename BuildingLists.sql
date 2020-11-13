@@ -2,9 +2,9 @@
 SELECT * FROM SSRS.AARSI_SharePaths
 
 
-drop table ##households_20201112
+drop table ##households_20201113
 select *
-into ##households_20201112
+into ##households_20201113
 from OPENQUERY(campus, '
 	DECLARE @endYear VARCHAR(10) = ''2021'';
 	SELECT *
@@ -57,9 +57,9 @@ from OPENQUERY(campus, '
 ')
 
 
-drop table ##students_20201112
+drop table ##students_20201113
 select *
-into ##students_20201112
+into ##students_20201113
 from OPENQUERY(campus, '
 	DECLARE @endYear VARCHAR(10) = ''2021'';
 	SELECT * FROM (
@@ -127,10 +127,11 @@ from OPENQUERY(campus, '
 	where enr.enrNum = 1
 ');
 
+SELECT * FROM ##households_20201113 WHERE personID = '400739'
 
-drop table ##studentSpecific_20201112
+drop table ##studentSpecific_20201113
 select *
-into ##studentSpecific_20201112
+into ##studentSpecific_20201113
 from OPENQUERY(campus, '
 	DECLARE @endYear VARCHAR(10) = ''2021'';
 	SELECT * FROM (
@@ -188,17 +189,17 @@ from OPENQUERY(campus, '
 				left outer join clark.dbo.CampusDictionary as cd7 on cd7.attributeID = cs7.attributeID and cd7.code = cs7.value 
 			left outer join clark.dbo.CustomStudent as cs8 on cs8.personID = e.personID and cs8.attributeID = 2399		--SOS Tab Device
 				left outer join clark.dbo.CampusDictionary as cd8 on cd8.attributeID = cs8.attributeID and cd8.code = cs8.value 
-		where 1=1
-			and 
+		where 
 			e.endYear = @endYear
-			and e.personID = ''2521408''
+			and e.personID = ''400739''
 			--and s.standardCode = @ccsdschool
 			--and id.studentNumber in (select studentNumber from ##rollcall)
 			--and s.city = ''Henderson''
 	) as enr
-	where enr.enrNum = 1
+--	where enr.enrNum = 1
 ');
 
+SELECT * FROM ##studentSpecific_20201113
 
 SELECT * FROM campus.clark.dbo.EnrollmentNV WHERE personID = '2521408'
 SELECT * FROM campus.clark.dbo.calendar WHERE calendarID ='14789'
